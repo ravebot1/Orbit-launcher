@@ -1,1 +1,43 @@
 
+
+name: Build Orbit Launcher APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'OrbitLauncher-GitHub-Starter.zip'
+      - '.github/workflows/build-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Extract launcher project
+        run: |
+          unzip -q OrbitLauncher-GitHub-Starter.zip -d project
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug APK
+        run: gradle -p project assembleDebug
+
+      - name: Save APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Orbit-Launcher-APK
+          path: project/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
