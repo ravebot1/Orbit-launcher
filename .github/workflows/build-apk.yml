@@ -36,7 +36,6 @@ jobs:
 
       - name: Generate Gradle Wrapper & Build
         run: |
-          cd Orbit-launcher* || cd orbit-launcher* || true
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew || true
           ./gradlew assembleDebug
